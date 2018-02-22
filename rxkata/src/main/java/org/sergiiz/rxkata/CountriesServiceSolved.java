@@ -2,6 +2,7 @@ package org.sergiiz.rxkata;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 import io.reactivex.Observable;
@@ -11,7 +12,14 @@ class CountriesServiceSolved implements CountriesService {
 
     @Override
     public Single<String> countryNameInCapitals(Country country) {
-        return null; // put your solution here
+
+        return Single.fromCallable(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return country.getName().toUpperCase();
+            }
+        });
+
     }
 
     public Single<Integer> countCountries(List<Country> countries) {
