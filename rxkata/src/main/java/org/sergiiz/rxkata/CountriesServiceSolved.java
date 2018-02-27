@@ -13,12 +13,7 @@ class CountriesServiceSolved implements CountriesService {
     @Override
     public Single<String> countryNameInCapitals(Country country) {
 
-        return Single.fromCallable(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return country.getName().toUpperCase();
-            }
-        });
+        return Single.fromCallable(() -> country.getName().toUpperCase());
 
     }
 
