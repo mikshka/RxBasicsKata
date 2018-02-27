@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.Single;
 
 class CountriesServiceSolved implements CountriesService {
@@ -18,11 +19,19 @@ class CountriesServiceSolved implements CountriesService {
     }
 
     public Single<Integer> countCountries(List<Country> countries) {
-        return null; // put your solution here
+        return Single.fromCallable(() -> countries.size());
     }
 
     public Observable<Long> listPopulationOfEachCountry(List<Country> countries) {
-        return null; // put your solution here;
+
+
+
+        return new Observable<Long>() {
+            @Override
+            protected void subscribeActual(Observer<? super Long> observer) {
+
+            }
+        };
     }
 
     @Override
