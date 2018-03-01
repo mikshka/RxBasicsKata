@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
+import java.util.stream.Collectors;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -23,25 +24,18 @@ class CountriesServiceSolved implements CountriesService {
     }
 
     public Observable<Long> listPopulationOfEachCountry(List<Country> countries) {
-
-
-
-        return new Observable<Long>() {
-            @Override
-            protected void subscribeActual(Observer<? super Long> observer) {
-
-            }
-        };
+        return Observable.fromIterable(countries).map(e -> e.getPopulation());
     }
 
     @Override
     public Observable<String> listNameOfEachCountry(List<Country> countries) {
-        return null; // put your solution here
+        return Observable.fromIterable(countries).map(e -> e.getName());
     }
 
     @Override
     public Observable<Country> listOnly3rdAnd4thCountry(List<Country> countries) {
-        return null; // put your solution here
+        Observable.fromIterable(countries).filter(e -> e.);
+        return null;
     }
 
     @Override
