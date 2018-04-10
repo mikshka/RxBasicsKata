@@ -34,13 +34,16 @@ class CountriesServiceSolved implements CountriesService {
 
     @Override
     public Observable<Country> listOnly3rdAnd4thCountry(List<Country> countries) {
-        Observable.fromIterable(countries).filter(e -> e.);
-        return null;
+       return Observable.fromIterable(countries).skip(2).take(2);
     }
 
     @Override
     public Single<Boolean> isAllCountriesPopulationMoreThanOneMillion(List<Country> countries) {
-        return null; // put your solution here
+        Single<Long> allCount = Observable.fromIterable(countries).count();
+        //allCount.
+        Single<Long> pop = Observable.fromIterable(countries).filter(e -> e.getPopulation() > 1000000l).count();
+
+        return Single.fromCallable(() -> pop.blockingGet().equals(allCount.blockingGet()));
     }
 
     @Override
