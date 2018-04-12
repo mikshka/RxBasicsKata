@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
+import java.util.stream.Collectors;
 
 class CountriesServiceSolved implements CountriesService {
 
@@ -37,11 +38,7 @@ class CountriesServiceSolved implements CountriesService {
 
     @Override
     public Single<Boolean> isAllCountriesPopulationMoreThanOneMillion(List<Country> countries) {
-        Single<Long> allCount = Observable.fromIterable(countries).count();
-        //allCount.
-        Single<Long> pop = Observable.fromIterable(countries).filter(e -> e.getPopulation() > 1000000l).count();
-
-        return Single.fromCallable(() -> pop.blockingGet().equals(allCount.blockingGet()));
+        return Observable.fromIterable(countries).all(e -> e.getPopulation() > 1000000l);
     }
 
     @Override
@@ -69,8 +66,7 @@ class CountriesServiceSolved implements CountriesService {
 
     @Override
     public Single<Map<String, Long>> mapCountriesToNamePopulation(List<Country> countries) {
-        Map<String, Long> map = new HashMap<>();
-       // Observable.fromIterable(countries).map(e -> Mapmap.put(e.getName(),e.getPopulation()));
+        Map<String, Long> map = countries.stream().collect(Collectors.toMap( e -> e.getName(), e -> e.getPopulation()));
         return Single.fromCallable( () -> map);
     }
 
