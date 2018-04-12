@@ -5,6 +5,7 @@ import io.reactivex.Single;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
@@ -13,8 +14,7 @@ class CountriesServiceSolved implements CountriesService {
 
     @Override
     public Single<String> countryNameInCapitals(Country country) {
-
-        return Single.fromCallable(() -> country.getName().toUpperCase());
+        return Single.just(country.getName().toUpperCase(Locale.US));
 
     }
 
@@ -66,8 +66,7 @@ class CountriesServiceSolved implements CountriesService {
 
     @Override
     public Single<Map<String, Long>> mapCountriesToNamePopulation(List<Country> countries) {
-        Map<String, Long> map = countries.stream().collect(Collectors.toMap( e -> e.getName(), e -> e.getPopulation()));
-        return Single.fromCallable( () -> map);
+        return Observable.fromIterable(countries).toMap(e -> e.getName(), e -> e.getPopulation());
     }
 
     @Override
