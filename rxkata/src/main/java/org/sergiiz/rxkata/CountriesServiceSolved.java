@@ -2,13 +2,13 @@ package org.sergiiz.rxkata;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 class CountriesServiceSolved implements CountriesService {
 
@@ -19,7 +19,7 @@ class CountriesServiceSolved implements CountriesService {
     }
 
     public Single<Integer> countCountries(List<Country> countries) {
-        return Single.fromCallable(() -> countries.size());
+        return Single.just(countries.size());
     }
 
     public Observable<Long> listPopulationOfEachCountry(List<Country> countries) {
@@ -49,14 +49,15 @@ class CountriesServiceSolved implements CountriesService {
 
     @Override
     public Observable<Country> listPopulationMoreThanOneMillionWithTimeoutFallbackToEmpty(final FutureTask<List<Country>> countriesFromNetwork) {
-        //Observable.fromIterable(countriesFromNetwork.)
-        return null; // put your solution here
+        return Observable.fromFuture(countriesFromNetwork, Schedulers.io()) // solution
+                .flatMap(countriesList -> Observable.fromIterable(countriesList))
+                .filter(country -> country.population > 1000000)
+                .timeout(1, TimeUnit.SECONDS, Observable.empty());
     }
 
     @Override
     public Observable<String> getCurrencyUsdIfNotFound(String countryName, List<Country> countries) {
         return Observable.fromIterable(countries).filter(e -> countryName.equals(e.getName())).map(e -> e.getCurrency()).defaultIfEmpty("USD");
-        //return null; // put your solution here
     }
 
     @Override
@@ -78,6 +79,7 @@ class CountriesServiceSolved implements CountriesService {
     @Override
     public Single<Boolean> areEmittingSameSequences(Observable<Country> countryObservable1,
                                                     Observable<Country> countryObservable2) {
-        return null; // put your solution here
+
+        return Observable.sequenceEqual(countryObservable1, countryObservable2);
     }
 }
